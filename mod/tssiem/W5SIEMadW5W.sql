@@ -75,32 +75,6 @@ create or replace synonym W5I.W5SIEM_secent for "W5SIEM_secent";
 CREATE INDEX "W5SIEM_secent_i0"
    ON "W5SIEM_secent" (ref) online;
 
-CREATE INDEX "W5SIEM_secent_i1"
-   ON "W5SIEM_secent" (ipaddress) online;
-
-CREATE INDEX "W5SIEM_secent_i2"
-   ON "W5SIEM_secent" (launch_datetime) online;
-
-CREATE INDEX "W5SIEM_secent_i3"
-   ON "W5SIEM_secent" (id) online;
-
-CREATE INDEX "W5SIEM_secent_i3"
-   ON "W5SIEM_secent" (pci_vuln) online;
-
-CREATE INDEX "W5SIEM_secent_i4"
-   ON "W5SIEM_secent" (qid) online;
-
-
-CREATE SEQUENCE "W5SIEM_secent_seq"
-   MINVALUE 1
-   START WITH 1
-   INCREMENT BY 1
-   CACHE 100;
-grant select on "W5SIEM_secent_seq" to W5SIEM;
-create or replace synonym W5SIEM.secent_seq for "W5SIEM_secent_seq";
-
-
-
 
 
 -- drop table "W5SIEM_secscanruntime";
