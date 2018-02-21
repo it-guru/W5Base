@@ -706,6 +706,80 @@ sub do_SSLCIPHERS
    $r->{sslciphers}->{exitcode}=0;
 }
 
+sub ciphertests
+{
+	my $success = 0;
+	my $fail = 0;
+	my $host = shift;
+	my $port = shift;
+	my $sversion = shift;
+	my $hashref = shift;
+	my $r = shift;
+	my %hash = %$hashref;
+   my $timeout=2;
+	foreach my $hk (sort keys %hash) {
+		#if ($verbose > 1) { print "Attempting connection to $host:$port using $_[0] $hk...\n"; }
+		my $sslsocket = IO::Socket::SSL->new(
+			PeerAddr => $host,
+			PeerPort => $port,
+			Proto => 'tcp',
+			SSL_verify_mode => 'SSL_VERIFY_NONE',
+			Timeout => $timeout, 
+			SSL_version => $sversion, 
+			SSL_cipher_list => $hk
+		);
+		if ($sslsocket) {
+         push(@{$r->{sslciphers}->{enabled}},"$sversion:".$hk);
+		$sslsocket->close();
+		} else {
+         push(@{$r->{sslciphers}->{disabled}},"$sversion:".$hk);
+		}
+	}
+}
+
+sub do_SSLCIPHERS
+{
+   my $r=shift;
+
+   my $host=$r->{target}->{host};
+   my $port=$r->{target}->{port};
+
+   $r->{operation}->{SSLCIPHERS}=1;
+
+   eval('use IO::Socket::SSL;');
+   eval('use Net::SSLeay;');
+   eval('use IO::Socket::INET;');
+   eval('use IO::Socket::INET6;');
+
+   if (!canTcpConnect($host,$port)){
+      push(@{$r->{sslcert}->{log}},
+          sprintf("Step0: generic tcp connect check %s:%s",$host,$port));
+      $r->{sslciphers}->{error}="can not tcp connect to $host:$port";
+      $r->{sslciphers}->{exitcode}=1;
+      return;
+   }
+   my $sock = IO::Socket::SSL->new(   # first try a simple SSL Connect
+      PeerAddr=>"$host:$port",
+      SSL_verify_mode=>'SSL_VERIFY_NONE',
+      Timeout=>3,
+      SSL_session_cache_size=>0
+   );
+   if (defined($sock)){
+      close($sock);
+      $r->{sslciphers}->{sslconnect}=1;
+      ciphertests($host,$port,'SSLv2', \%SSLTEST::ssl2ciphers,$r);
+      ciphertests($host,$port,'SSLv3', \%SSLTEST::ssl3ciphers,$r);
+      ciphertests($host,$port,'TLSv1', \%SSLTEST::ssl3ciphers,$r);
+      ciphertests($host,$port,'TLSv11', \%SSLTEST::ssl3ciphers,$r);
+      ciphertests($host,$port,'TLSv12', \%SSLTEST::tlsv12ciphers,$r);
+   }
+   else{
+      $r->{sslciphers}->{sslconnect}=0;
+   }
+
+   $r->{sslciphers}->{exitcode}=0;
+}
+
 sub do_REVDNS
 {
    my $r=shift;
