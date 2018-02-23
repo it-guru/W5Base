@@ -202,6 +202,13 @@ sub qcheckRecord
             }
          }
       }
+<<<<<<< HEAD
+=======
+      elsif ($res->{exitcode} eq "101"){
+         my $msg="can not resolv hostname";
+         return(3,{qmsg=>$msg,dataissue=>$msg});
+      }
+>>>>>>> b723c33... fix invalid hostname handling in dnsresolver for url check based on https://darwin.telekom.de/darwin/auth/base/workflow/ById/15129835710001
       else{
          my $res;
          eval('
