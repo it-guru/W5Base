@@ -145,6 +145,10 @@ my $t1;
 >>>>>>> 12c819b... try to use sslv3 first
 my $q=new CGI();
 my @CERTBuffer;
+<<<<<<< HEAD
+=======
+my $ScriptTimeout=60;
+>>>>>>> 46c479e... try to find beetter W5ProbeIP process
 
 if (request_method() eq "POST"){
    ProbeIP();
@@ -419,11 +423,12 @@ sub do_SSLCERT
 
    @CERTBuffer=();
 
-
+   my $step=0;
 
    if (!defined($sock) && $#CERTBuffer==-1){
+      $step++;
       push(@{$r->{sslcert}->{log}},
-          sprintf("Step3: try to connect to %s:%s SSLv3",$host,$port));
+          sprintf("Step${step}: try to connect to %s:%s SSLv3",$host,$port));
       $sock = IO::Socket::SSL->new(
          PeerAddr=>"$host:$port",
          SSL_version=>'SSLv3',
@@ -440,8 +445,47 @@ sub do_SSLCERT
 
 
    if (!defined($sock) && $#CERTBuffer==-1){
+      $step++;
       push(@{$r->{sslcert}->{log}},
-          sprintf("Step2: try to connect to %s:%s SSLv2",$host,$port));
+          sprintf("Step${step}: try to connect to %s:%s TLSv12",$host,$port));
+      $sock = IO::Socket::SSL->new(
+         PeerAddr=>"$host:$port",
+         SSL_version=>'TLSv12',
+         SSL_verify_mode=>'SSL_VERIFY_PEER',
+         Timeout=>5,
+         SSL_verify_callback=>\&preConnectReadServerCerts,
+         SSL_session_cache_size=>0
+      );
+      if (!defined($sock)){
+         push(@{$r->{sslcert}->{log}},
+             sprintf("->result=%s",IO::Socket::SSL->errstr()));
+      }
+   }
+
+
+   if (!defined($sock) && $#CERTBuffer==-1){
+      $step++;
+      push(@{$r->{sslcert}->{log}},
+          sprintf("Step${step}: try to connect to %s:%s TLSv11",$host,$port));
+      $sock = IO::Socket::SSL->new(
+         PeerAddr=>"$host:$port",
+         SSL_version=>'TLSv11',
+         SSL_verify_mode=>'SSL_VERIFY_PEER',
+         Timeout=>5,
+         SSL_verify_callback=>\&preConnectReadServerCerts,
+         SSL_session_cache_size=>0
+      );
+      if (!defined($sock)){
+         push(@{$r->{sslcert}->{log}},
+             sprintf("->result=%s",IO::Socket::SSL->errstr()));
+      }
+   }
+
+
+   if (!defined($sock) && $#CERTBuffer==-1){
+      $step++;
+      push(@{$r->{sslcert}->{log}},
+          sprintf("Step${step}: try to connect to %s:%s SSLv2",$host,$port));
       $sock = IO::Socket::SSL->new(
          PeerAddr=>"$host:$port",
          SSL_version=>'SSLv2',
@@ -456,8 +500,10 @@ sub do_SSLCERT
       }
    }
 
-
    if (!defined($sock) && $#CERTBuffer==-1){
+      $step++;
+      push(@{$r->{sslcert}->{log}},
+          sprintf("Step${step}: try to connect to %s:%s SSLv23",$host,$port));
       my $sock = IO::Socket::SSL->new(
          PeerAddr=>"$host:$port",
          SSL_version=>'SSLv23',
