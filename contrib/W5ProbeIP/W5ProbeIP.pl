@@ -9,6 +9,140 @@ use Time::HiRes;
 
 
 
+<<<<<<< HEAD
+=======
+
+
+%ssl3ciphers = (
+	'ECDHE-RSA-AES256-SHA' => 'AES 256 bits, RSA Auth, SHA1 MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES256-SHA' => 'AES 256 bits, ECDSA Auth, SHA1 MAC, ECDH Kx',
+	'SRP-DSS-AES-256-CBC-SHA' => 'AES 256 bits, DSS Auth, SHA1 MAC, SRP Kx',
+	'SRP-RSA-AES-256-CBC-SHA' => 'AES 256 bits, RSA Auth, SHA1 MAC, SRP Kx',
+	'SRP-AES-256-CBC-SHA' => 'AES 256 bits, SRP Auth, SHA1 MAC, SRP Kx',
+	'DHE-RSA-AES256-SHA' => 'AES 256 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'DHE-DSS-AES256-SHA' => 'AES 256 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'DHE-RSA-CAMELLIA256-SHA' => 'Camellia 256 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'DHE-DSS-CAMELLIA256-SHA' => 'Camellia 256 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'AECDH-AES256-SHA' => 'AES 256 bits, Null Auth, SHA1 MAC, ECDH Kx',
+	'ADH-AES256-SHA' => 'AES 256 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ADH-CAMELLIA256-SHA' => 'Camellia 256 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ECDH-RSA-AES256-SHA' => 'AES 256 bits, ECDH Auth, SHA1 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES256-SHA' => 'AES 256 bits, ECDH Auth, SHA1 MAC, ECDH/ECDSA Kx',
+	'AES256-SHA' => 'AES 256 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'CAMELLIA256-SHA' => 'Camellia 256 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'PSK-AES256-CBC-SHA' => 'AES 256 bits, PSK Auth, SHA1 MAC, PSK Kx',
+	'ECDHE-RSA-DES-CBC3-SHA' => '3DES 168 bits, RSA Auth, SHA1 MAC, ECDH Kx',
+	'ECDHE-ECDSA-DES-CBC3-SHA' => '3DES 168 bits, ECDSA Auth, SHA1 MAC, ECDH Kx',
+	'SRP-DSS-3DES-EDE-CBC-SHA' => '3DES 168 bits, DSS Auth, SHA1 MAC, SRP Kx',
+	'SRP-RSA-3DES-EDE-CBC-SHA' => '3DES 168 bits, RSA Auth, SHA1 MAC, SRP Kx',
+	'SRP-3DES-EDE-CBC-SHA' => '3DES 168 bits, SRP Auth, SHA1 MAC, SRP Kx',
+	'EDH-RSA-DES-CBC3-SHA' => '3DES 168 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'EDH-DSS-DES-CBC3-SHA' => '3DES 168 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'AECDH-DES-CBC3-SHA' => '3DES 168 bits, Null Auth, SHA1 MAC, ECDH Kx',
+	'ADH-DES-CBC3-SHA' => '3DES 168 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ECDH-RSA-DES-CBC3-SHA' => '3DES 168 bits, ECDH Auth, SHA1 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-DES-CBC3-SHA' => '3DES 168 bits, ECDH Auth, SHA1 MAC, ECDH/ECDSA Kx',
+	'DES-CBC3-SHA' => '3DES 168 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'PSK-3DES-EDE-CBC-SHA' => '3DES 168 bits, PSK Auth, SHA1 MAC, PSK Kx',
+	'ECDHE-RSA-AES128-SHA' => 'AES 128 bits, RSA Auth, SHA1 MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES128-SHA' => 'AES 128 bits, ECDSA Auth, SHA1 MAC, ECDH Kx',
+	'SRP-DSS-AES-128-CBC-SHA' => 'AES 128 bits, DSS Auth, SHA1 MAC, SRP Kx',
+	'SRP-RSA-AES-128-CBC-SHA' => 'AES 128 bits, RSA Auth, SHA1 MAC, SRP Kx',
+	'SRP-AES-128-CBC-SHA' => 'AES 128 bits, SRP Auth, SHA1 MAC, SRP Kx',
+	'DHE-RSA-AES128-SHA' => 'AES 128 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'DHE-DSS-AES128-SHA' => 'AES 128 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'DHE-RSA-SEED-SHA' => 'SEED 128 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'DHE-DSS-SEED-SHA' => 'SEED 128 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'DHE-RSA-CAMELLIA128-SHA' => 'Camellia 128 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'DHE-DSS-CAMELLIA128-SHA' => 'Camellia 128 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'AECDH-AES128-SHA' => 'AES 128 bits, Null Auth, SHA1 MAC, ECDH Kx',
+	'ADH-AES128-SHA' => 'AES 128 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ADH-SEED-SHA' => 'SEED 128 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ADH-CAMELLIA128-SHA' => 'Camellia 128 bits, Null Auth, SHA1 MAC, DH Kx',
+	'ECDH-RSA-AES128-SHA' => 'AES 128 bits, ECDH Auth, SHA1 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES128-SHA' => 'AES 128 bits, ECDH Auth, SHA1 MAC, ECDH/ECDSA Kx',
+	'AES128-SHA' => 'AES 128 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'SEED-SHA' => 'SEED 128 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'CAMELLIA128-SHA' => 'Camellia 128 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'PSK-AES128-CBC-SHA' => 'AES 128 bits, PSK Auth, SHA1 MAC, PSK Kx',
+	'ECDHE-RSA-RC4-SHA' => 'RC4 128 bits, RSA Auth, SHA1 MAC, ECDH Kx',
+	'ECDHE-ECDSA-RC4-SHA' => 'RC4 128 bits, ECDSA Auth, SHA1 MAC, ECDH Kx',
+	'AECDH-RC4-SHA' => 'RC4 128 bits, Null Auth, SHA1 MAC, ECDH Kx',
+	'ADH-RC4-MD5' => 'RC4 128 bits, Null Auth, MD5 MAC, DH Kx',
+	'ECDH-RSA-RC4-SHA' => 'RC4 128 bits, ECDH Auth, SHA1 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-RC4-SHA' => 'RC4 128 bits, ECDH Auth, SHA1 MAC, ECDH/ECDSA Kx',
+	'RC4-SHA' => 'RC4 128 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'RC4-MD5' => 'RC4 128 bits, RSA Auth, MD5 MAC, RSA Kx',
+	'PSK-RC4-SHA' => 'RC4 128 bits, PSK Auth, SHA1 MAC, PSK Kx',
+	'EDH-RSA-DES-CBC-SHA' => 'DES 56 bits, RSA Auth, SHA1 MAC, DH Kx',
+	'EDH-DSS-DES-CBC-SHA' => 'DES 56 bits, DSS Auth, SHA1 MAC, DH Kx',
+	'ADH-DES-CBC-SHA' => 'DES 56 bits, Null Auth, SHA1 MAC, DH Kx',
+	'DES-CBC-SHA' => 'DES 56 bits, RSA Auth, SHA1 MAC, RSA Kx',
+	'EXP-EDH-RSA-DES-CBC-SHA' => 'DES 40 bits, RSA Auth, SHA1 MAC, DH(512) Kx',
+	'EXP-EDH-DSS-DES-CBC-SHA' => 'DES 40 bits, DSS Auth, SHA1 MAC, DH(512) Kx',
+	'EXP-ADH-DES-CBC-SHA' => 'DES 40 bits, Null Auth, SHA1 MAC, DH(512) Kx',
+	'EXP-DES-CBC-SHA' => 'DES 40 bits, RSA Auth, SHA1 MAC, RSA(512) Kx',
+	'EXP-RC2-CBC-MD5' => 'RC2 40 bits, RSA Auth, MD5 MAC, RSA(512) Kx',
+	'EXP-ADH-RC4-MD5' => 'RC4 40 bits, Null Auth, MD5 MAC, DH(512) Kx',
+	'EXP-RC4-MD5' => 'RC4 40 bits, RSA Auth, MD5 MAC, RSA(512) Kx',
+	'ECDHE-RSA-NULL-SHA' => 'Null, RSA Auth, SHA1 MAC, ECDH Kx',
+	'ECDHE-ECDSA-NULL-SHA' => 'Null, ECDSA Auth, SHA1 MAC, ECDH Kx',
+	'AECDH-NULL-SHA' => 'Null, Null Auth, SHA1 MAC, ECDH Kx',
+	'ECDH-RSA-NULL-SHA' => 'Null, ECDH Auth, SHA1 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-NULL-SHA' => 'Null, ECDH Auth, SHA1 MAC, ECDH/ECDSA Kx',
+	'NULL-SHA' => 'Null, RSA Auth, SHA1 MAC, RSA Kx',
+	'NULL-MD5' => 'Null, RSA Auth, MD5 MAC, RSA Kx'
+);
+
+
+%tlsv12ciphers = (
+	'ECDHE-RSA-AES256-GCM-SHA384' => 'AESGCM 256 bits, RSA Auth, AEAD MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES256-GCM-SHA384' => 'AESGCM 256 bits, ECDSA Auth, AEAD MAC, ECDH Kx',
+	'ECDHE-RSA-AES256-SHA384' => 'AES 256 bits, RSA Auth, SHA384 MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES256-SHA384' => 'AES 256 bits, ECDSA Auth, SHA384 MAC, ECDH Kx',
+	'DHE-DSS-AES256-GCM-SHA384' => 'AESGCM 256 bits, DSS Auth, AEAD MAC, DH Kx',
+	'DHE-RSA-AES256-GCM-SHA384' => 'AESGCM 256 bits, RSA Auth, AEAD MAC, DH Kx',
+	'DHE-RSA-AES256-SHA256' => 'AES 256 bits, RSA Auth, SHA256 MAC, DH Kx',
+	'DHE-DSS-AES256-SHA256' => 'AES 256 bits, DSS Auth, SHA256 MAC, DH Kx',
+	'ADH-AES256-GCM-SHA384' => 'AESGCM 256 bits, Null Auth, AEAD MAC, DH Kx',
+	'ADH-AES256-SHA256' => 'AES 256 bits, Null Auth, SHA256 MAC, DH Kx',
+	'ECDH-RSA-AES256-GCM-SHA384' => 'AESGCM 256 bits, ECDH Auth, AEAD MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES256-GCM-SHA384' => 'AESGCM 256 bits, ECDH Auth, AEAD MAC, ECDH/ECDSA Kx',
+	'ECDH-RSA-AES256-SHA384' => 'AES 256 bits, ECDH Auth, SHA384 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES256-SHA384' => 'AES 256 bits, ECDH Auth, SHA384 MAC, ECDH/ECDSA Kx',
+	'AES256-GCM-SHA384' => 'AESGCM 256 bits, RSA Auth, AEAD MAC, RSA Kx',
+	'AES256-SHA256' => 'AES 256 bits, RSA Auth, SHA256 MAC, RSA Kx',
+	'ECDHE-RSA-AES128-GCM-SHA256' => 'AESGCM 128 bits, RSA Auth, AEAD MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES128-GCM-SHA256' => 'AESGCM 128 bits, ECDSA Auth, AEAD MAC, ECDH Kx',
+	'ECDHE-RSA-AES128-SHA256' => 'AES 128 bits, RSA Auth, SHA256 MAC, ECDH Kx',
+	'ECDHE-ECDSA-AES128-SHA256' => 'AES 128 bits, ECDSA Auth, SHA256 MAC, ECDH Kx',
+	'DHE-DSS-AES128-GCM-SHA256' => 'AESGCM 128 bits, DSS Auth, AEAD MAC, DH Kx',
+	'DHE-RSA-AES128-GCM-SHA256' => 'AESGCM 128 bits, RSA Auth, AEAD MAC, DH Kx',
+	'DHE-RSA-AES128-SHA256' => 'AES 128 bits, RSA Auth, SHA256 MAC, DH Kx',
+	'DHE-DSS-AES128-SHA256' => 'AES 128 bits, DSS Auth, SHA256 MAC, DH Kx',
+	'ADH-AES128-GCM-SHA256' => 'AESGCM 128 bits, Null Auth, AEAD MAC, DH Kx',
+	'ADH-AES128-SHA256' => 'AES 128 bits, Null Auth, SHA256 MAC, DH Kx',
+	'ECDH-RSA-AES128-GCM-SHA256' => 'AESGCM 128 bits, ECDH Auth, AEAD MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES128-GCM-SHA256' => 'AESGCM 128 bits, ECDH Auth, AEAD MAC, ECDH/ECDSA Kx',
+	'ECDH-RSA-AES128-SHA256' => 'AES 128 bits, ECDH Auth, SHA256 MAC, ECDH/RSA Kx',
+	'ECDH-ECDSA-AES128-SHA256' => 'AES 128 bits, ECDH Auth, SHA256 MAC, ECDH/ECDSA Kx',
+	'AES128-GCM-SHA256' => 'AESGCM 128 bits, RSA Auth, AEAD MAC, RSA Kx',
+	'AES128-SHA256' => 'AES 128 bits, RSA Auth, SHA256 MAC, RSA Kx',
+	'NULL-SHA256' => 'Null, RSA Auth, SHA256 MAC, RSA Kx'
+);
+
+
+# add the list of ssl3 ciphers to the tlsv1.2 list
+while ( ($k,$v) = each(%ssl3ciphers) ) {
+    $tlsv12ciphers{$k} = $v;
+}
+
+package main;
+
+
+my $r={};
+my $t1;
+>>>>>>> 12c819b... try to use sslv3 first
 my $q=new CGI();
 my @CERTBuffer;
 
@@ -24,6 +158,40 @@ else{
 exit(0);
 
 
+<<<<<<< HEAD
+=======
+sub outputResults
+{
+   foreach my $k (keys(%$r)){
+      if (ref($r->{$k}) eq "HASH"){
+         if (exists($r->{$k}->{exitcode}) && 
+             $r->{$k}->{exitcode} ne "0"){
+            if ($r->{exitcode}<$r->{$k}->{exitcode}){
+               $r->{exitcode}=$r->{$k}->{exitcode};
+               if (defined($r->{$k}->{exitmsg})){
+                  $r->{exitmsg}=$r->{$k}->{exitmsg};
+               }
+            }
+         }
+      }
+   }
+   if (!exists($r->{exitcode})){
+      $r->{exitcode}=0;
+   }
+   my $t2=Time::HiRes::time();
+   $r->{startunixtime}=$t1;
+   $r->{endunixtime}=$t2;
+   $r->{duration}=$t2-$t1;
+
+   print to_json($r,{ 
+      utf8=>1, 
+      pretty=>1 
+   });
+}
+
+
+
+>>>>>>> 12c819b... try to use sslv3 first
 sub ProbeIP()
 {
    $|=1;
@@ -71,7 +239,7 @@ sub ProbeIP()
       }
 
    }
-   my $t1=Time::HiRes::time();
+   $t1=Time::HiRes::time();
    my @operation=$q->param("operation");
    do_DNSRESOLV($r) if (grep(/^DNSRESOLV$/,@operation));
    do_SSLCERT($r)   if (grep(/^SSLCERT$/,@operation));
@@ -250,34 +418,9 @@ sub do_SSLCERT
 
 
    @CERTBuffer=();
-   my $sock = IO::Socket::SSL->new(
-      PeerAddr=>"$host:$port",
-      SSL_version=>'SSLv23',
-      SSL_verify_mode=>'SSL_VERIFY_PEER',
-      Timeout=>5,
-      SSL_verify_callback=>\&preConnectReadServerCerts,
-      SSL_session_cache_size=>0
-   );
-   if (!defined($sock) && $#CERTBuffer==-1){
-      push(@{$r->{sslcert}->{log}},
-          sprintf("->result=%s",IO::Socket::SSL->errstr()));
-   }
-   if (!defined($sock) && $#CERTBuffer==-1){
-      push(@{$r->{sslcert}->{log}},
-          sprintf("Step2: try to connect to %s:%s SSLv2",$host,$port));
-      $sock = IO::Socket::SSL->new(
-         PeerAddr=>"$host:$port",
-         SSL_version=>'SSLv2',
-         SSL_verify_mode=>'SSL_VERIFY_PEER',
-         SSL_verify_callback=>\&preConnectReadServerCerts,
-         Timeout=>5,
-         SSL_session_cache_size=>0
-      );
-      if (!defined($sock) && $#CERTBuffer==-1){
-         push(@{$r->{sslcert}->{log}},
-             sprintf("->result=%s",IO::Socket::SSL->errstr()));
-      }
-   }
+
+
+
    if (!defined($sock) && $#CERTBuffer==-1){
       push(@{$r->{sslcert}->{log}},
           sprintf("Step3: try to connect to %s:%s SSLv3",$host,$port));
@@ -294,6 +437,49 @@ sub do_SSLCERT
              sprintf("->result=%s",IO::Socket::SSL->errstr()));
       }
    }
+
+
+   if (!defined($sock) && $#CERTBuffer==-1){
+      push(@{$r->{sslcert}->{log}},
+          sprintf("Step2: try to connect to %s:%s SSLv2",$host,$port));
+      $sock = IO::Socket::SSL->new(
+         PeerAddr=>"$host:$port",
+         SSL_version=>'SSLv2',
+         SSL_verify_mode=>'SSL_VERIFY_PEER',
+         SSL_verify_callback=>\&preConnectReadServerCerts,
+         Timeout=>5,
+         SSL_session_cache_size=>0
+      );
+      if (!defined($sock) && $#CERTBuffer==-1){
+         push(@{$r->{sslcert}->{log}},
+             sprintf("->result=%s",IO::Socket::SSL->errstr()));
+      }
+   }
+
+
+   if (!defined($sock) && $#CERTBuffer==-1){
+      my $sock = IO::Socket::SSL->new(
+         PeerAddr=>"$host:$port",
+         SSL_version=>'SSLv23',
+         SSL_verify_mode=>'SSL_VERIFY_PEER',
+         Timeout=>5,
+         SSL_verify_callback=>\&preConnectReadServerCerts,
+         SSL_session_cache_size=>0
+      );
+      if (!defined($sock) && $#CERTBuffer==-1){
+         push(@{$r->{sslcert}->{log}},
+             sprintf("->result=%s",IO::Socket::SSL->errstr()));
+      }
+   }
+<<<<<<< HEAD
+=======
+
+
+
+
+   delete($r->{sslcert}->{exitcode}); # remove timeout flag
+   delete($r->{sslcert}->{exitmsg});
+>>>>>>> 12c819b... try to use sslv3 first
    if (defined($sock)){
       my $cert = $sock->peer_certificate();
       if (1){
