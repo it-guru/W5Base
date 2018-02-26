@@ -525,7 +525,6 @@ sub do_SSLCERT
       }
    }
 
-
    if (!defined($sock) && $#CERTBuffer==-1){
       $step++;
       push(@{$r->{sslcert}->{log}},
