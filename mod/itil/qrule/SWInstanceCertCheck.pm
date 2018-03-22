@@ -161,6 +161,7 @@ sub qcheckRecord
          $sslhost=$host;
          $sslport=443;
       }
+<<<<<<< HEAD
       if (my (undef,$host)=$sslurl=~m#^(ldaps)://([^/]+)(/){0,1}$#){
          $sslhost=$host;
          $sslport=636;
@@ -184,6 +185,59 @@ sub qcheckRecord
          if ($@ ne ""){
             msg(INFO,"message from eval in checkSSL $@");
             $sslstate=$@;
+=======
+      my $url=$rec->{'sslurl'};
+      my $networkid=$rec->{ssl_networkid};
+      my $now=NowStamp("en");
+      my $res=itil::lib::Listedit::probeUrl($dataobj,$url,[],$networkid);
+      $forcedupd->{sslcheck}=$now;
+      if (ref($res) eq "HASH"){
+         if ($res->{exitcode} eq "0"){
+            $sslstate="Check OK";
+            if (ref($res->{sslcert}) eq "HASH" && 
+                $res->{sslcert}->{exitcode} eq "0"){
+               if ($res->{sslcert}->{ssl_cert_begin} eq "" ||
+                   $res->{sslcert}->{ssl_cert_end} eq ""){
+                  printf STDERR ("ERROR: missing SSL start/end data ".
+                                 "in $url\n%s\n",Dumper($res));
+               }
+               else{
+                  $forcedupd->{sslbegin}=$self->getParent->ExpandTimeExpression(
+                     $res->{sslcert}->{ssl_cert_begin},'en','GMT');
+                  $forcedupd->{sslend}=$self->getParent->ExpandTimeExpression(
+                     $res->{sslcert}->{ssl_cert_end},'en','GMT');
+                  $sslend=$forcedupd->{sslend};
+                  $forcedupd->{ssl_cipher}=
+                     $res->{sslcert}->{ssl_cipher};
+                  $forcedupd->{ssl_version}=
+                     $res->{sslcert}->{ssl_version};
+                  $forcedupd->{ssl_cert_serialno}=
+                     $res->{sslcert}->{ssl_cert_serialno};
+                  $forcedupd->{ssl_cert_issuerdn}=
+                     $res->{sslcert}->{ssl_cert_issuerdn};
+                  $forcedupd->{ssl_certdump}=
+                     $res->{sslcert}->{certtree}->[
+                         $#{$res->{sslcert}->{certtree}}]->{name};
+                  if ($res->{networkid} ne "" &&
+                      $res->{networkid} ne $networkid &&
+                      ($rec->{ssl_networkid} eq "" ||
+                       $rec->{ssl_networkid} eq "0")){
+                     # no networkarea was defined, and we found one, so we set
+                     # it fix
+                     my $swop=$dataobj->Clone();
+                     $swop->SetFilter({id=>\$rec->{id}}); 
+                     my ($oldrec,$msg)=$swop->getOnlyFirst(qw(ALL)); 
+                     $swop->ValidatedUpdateRecord($oldrec,{
+                        ssl_networkid=>$res->{networkid}
+                     },{id=>\$rec->{id}});
+                  }
+               }
+            }
+         }
+         elsif ($res->{exitcode} eq "101"){
+            $sslstate="DNS query error";
+            return(undef,{qmsg=>"temporary ERROR: ".$res->{exitmsg}});
+>>>>>>> 2374ff3... add normalisation for issuerdn in swinstance cert data and applwallet based on https://darwin.telekom.de/darwin/auth/base/workflow/ById/15129835710001
          }
          else{
             $sslstate=$msg;
