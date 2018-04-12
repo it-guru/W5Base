@@ -1205,6 +1205,62 @@ sub Validate
       }
    }
 
+   my $applid=effVal($oldrec,$newrec,"applid");
+   my $cistatusid=effVal($oldrec,$newrec,"cistatusid");
+   if ($applid eq "" && $cistatusid>2 && $cistatusid<6){
+      $self->LastMsg(ERROR,"CI-Status level needs a valid application specification");
+      return(0);
+   }
+   if ($cistatusid<6){ # validation process for swnature handling
+      my $swnature=trim(effVal($oldrec,$newrec,"swnature"));
+      my @posible=("Other");
+      if (effChanged($oldrec,$newrec,"lnksoftwaresystemid")){
+         my $lnksoftwaresystem=$newrec->{lnksoftwaresystemid};
+         if ($lnksoftwaresystem ne ""){
+            my $lnksoftware=getModuleObject($self->Config(),"itil::lnksoftware");
+            $lnksoftware->SetFilter({id=>\$lnksoftwaresystem});
+            my ($swirec)=$lnksoftware->getOnlyFirst(qw(softwareid));
+            if (defined($swirec) && $swirec->{softwareid} ne ""){
+               my $software=getModuleObject($self->Config(),"itil::software");
+               $software->SetFilter({id=>\$swirec->{softwareid}});
+               my ($swrec)=$software->getOnlyFirst(qw(instanceid));
+               if (defined($swrec)){
+                  my @k=$self->getPosibleInstanceTypes($swrec->{instanceid});
+                  @posible=();
+                  while(my $k=shift(@k)){
+                     push(@posible,$k);
+                     my $label=shift(@k);
+                  }
+                  if ($swnature eq "Other" && $#posible>0){
+                     $swnature="";
+                  }
+               }   
+            }
+         }
+      }
+      else{
+         if (defined($oldrec)){
+            my $posibleinstanceidentify=effVal($oldrec,$newrec,"posibleinstanceidentify");
+            my @k=$self->getPosibleInstanceTypes($posibleinstanceidentify);
+            @posible=();
+            while(my $k=shift(@k)){
+               push(@posible,$k);
+               my $label=shift(@k);
+            }
+         }
+      }
+      if (!in_array(\@posible,$swnature)){
+         $swnature=$posible[0];
+      }
+      if ($swnature ne trim(effVal($oldrec,$newrec,"swnature"))){
+         if (defined($oldrec)){
+            $self->LastMsg(WARN,"automatic swnature changed");
+         }
+         $newrec->{rawswnature}=$swnature;
+         $newrec->{swnature}=$swnature;
+      }
+   }
+
    my $swnature=trim(effVal($oldrec,$newrec,"swnature"));
    my $name=trim(effVal($oldrec,$newrec,"name"));
    my $addname=trim(effVal($oldrec,$newrec,"addname"));
