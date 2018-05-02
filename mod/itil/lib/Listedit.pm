@@ -326,6 +326,154 @@ sub isWriteOnBProcessValid
 }
 
 
+sub _probeUrl
+{
+   my $self=shift;
+   my $url=shift;
+   my $checks=shift;
+   my $networkid=shift;
+   if (!defined($checks) ||
+       ref($checks) ne "ARRAY" ||
+       $#{$checks}==-1){
+      $checks=[qw(IPCONNECT DNSRESOLV SSLCERT REVDNS)];
+   }
+   my $d={
+      exitcode=>'1',
+      exitmsg=>'unable to check url'
+   };
+
+   my $na=getModuleObject($self->Config,"itil::network");
+   $na->SetFilter({id=>\$networkid});
+   my ($nrec,$msg)=$na->getOnlyFirst(qw(ALL));
+
+   my $probeipurl=$nrec->{probeipurl};
+   my $probeipproxy=$nrec->{probeipproxy};
+
+   if (!($url=~m#^[a-z0-9]+://#)){
+      $url="tcp://".$url;
+   }
+ 
+   if ($probeipurl ne ""){
+      my $ua;
+      eval('
+use LWP::UserAgent;
+use HTTP::Request::Common;
+use HTTP::Cookies;
+use HTML::Parser;
+
+$ua=new LWP::UserAgent(env_proxy=>0);
+$ua->timeout(60);
+$ua->agent("Mozilla/5.0 (X11; U; Linux i686; de-AT; rv:1.8.1.4) Gecko/20070509 SeaMonkey/1.1.2");
+');
+      if ($@ ne ""){
+         $d->{exitcode}=1100;
+         $d->{exitmsg}=$@;
+      }
+      else{
+         if (defined($ua)){
+            if ($probeipproxy eq "HTTP_PROXY"){
+               $probeipproxy=$self->Config->Param("http_proxy");
+            }
+            if ($probeipproxy ne ""){
+               $ua->proxy(['http','https'],$probeipproxy);
+            }
+         }
+         $ua->timeout(200);
+         my $req=POST($probeipurl,[url=>$url,operation=>$checks]);
+         $req->header('user-agent'=>'Mozilla/5.0 (X11; Linux x86_64)');
+         $req->header('Accept'=>'*/*');
+
+         my $response=$ua->request($req);
+         if ($response->code ne "200"){
+            msg(ERROR,"fail to probeip '$probeipurl' at ".
+                      "network '$nrec->{name}' response ".
+                      "HTTP Code='".$response->code."' while query '$url'");
+            return(0,undef);
+         }
+         my $res=$response->content;
+         if ($res eq ""){
+            msg(ERROR,"can not contact probeip url '$url' at ".
+                      "network '$nrec->{name}'");
+            $d->{exitcode}=1101;
+            $d->{exitmsg}="probeip url not accessable";
+            return($d);
+         }
+         my $rdata;
+         eval("use JSON; \$rdata=decode_json(\$res);");
+         if ($@ ne ""){
+            $d->{exitcode}=1200;
+            $d->{exitmsg}=$@;
+         }
+         if (ref($rdata) eq "HASH"){
+            $d=$rdata;
+            $d->{networkid}=$networkid;
+            $d->{probeipurl}=$probeipurl;
+            if ($probeipproxy ne ""){
+               $d->{probeipurl}=$probeipurl;
+            }
+         }
+         else{
+            $d->{exitcode}=1201;
+            msg(ERROR,"invalid JSON response from probeip ".
+                      "url '$probeipurl' at ".
+                      "network '$nrec->{name}' while query to '$url'");
+            print STDERR "DEBUG INfo:".Dumper($rdata);
+            $d->{exitmsg}="probeip url answers with invalid json data";
+         }
+      }
+   }
+   else{
+      $d->{exitcode}=999;
+      my $networkname="NetworkAreaID:$networkid";
+      if (defined($nrec)){
+         $networkname=$nrec->{name}
+      }
+      $d->{exitmsg}="ERROR: unable to scan networkarea \"$networkname\" - ".
+                    "no probe url known";
+   }
+   return($d);
+}
+
+sub probeUrl
+{
+   my $self=shift;
+   my $url=shift;
+   my $checks=shift;
+   my $networkid=shift;
+
+   if ($networkid ne "" && $networkid ne "0"){
+      my $tempchk=_probeUrl($self,$url,$checks,$networkid);
+      if (ref($tempchk) eq "HASH" &&
+          $tempchk->{exitcode} eq "502"   # Bad Gateway
+         ){  # sleep some time and make a second try
+         sleep(10);
+         $tempchk=_probeUrl($self,$url,$checks,$networkid);
+      }
+      return($tempchk);
+
+
+   }
+   else{
+      my $na=getModuleObject($self->Config,"itil::network");
+      $na->SetFilter({cistatusid=>'4',probeipurl=>'!""'});
+      foreach my $netrec ($na->getHashList(qw(ALL))){
+         if ($netrec->{id} ne "0" && $netrec->{id} ne ""){
+            my $tempchk=probeUrl($self,$url,$checks,$netrec->{id});
+            if (ref($tempchk) eq "HASH" &&
+                $tempchk->{exitcode} eq "0" ){
+               return($tempchk);
+            }
+         }
+      }
+      return({
+         exitcode=>9999,
+         exitmsg=>"ERROR: unable to find url in any networkarea"
+      });
+   }
+}
+
+
+
 #sub preQualityCheckRecord
 #{
 #   my $self=shift;
@@ -1049,7 +1197,7 @@ sub handleCertExpiration
    my $notifyfld=$param->{expnotifyfld};
 
    my $notifylevel=8*7; # 8 weeks - mail notification
-   my $issuelevel =1*7; # 1 week  - dataissue
+   my $issuelevel =2*7; # 2 week  - dataissue
 
    $notifylevel=$param->{notifylevel} if (exists($param->{notifylevel}));
    $issuelevel =$param->{issuelevel}  if (exists($param->{issuelevel}));
