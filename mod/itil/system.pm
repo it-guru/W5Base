@@ -2153,6 +2153,14 @@ sub HtmlPublicDetail   # for display record in QuickFinder or with no access
 }
 
 
+sub jsExploreFormatLabelMethod
+{
+   my $self=shift;
+   return("newlabel=newlabel.replace(' - ','\\n');");
+}
+
+
+
 
 
 
