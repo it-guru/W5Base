@@ -2595,6 +2595,10 @@ sub jsExploreObjectMethods
                                   app.toObjKey(dataobj,ifrec.toapplid));
                    }
                 }
+                app.processOpStack(function(arrayOfResults){
+                   console.log(\"OK, all interfaces loaded arrayOfResults=\",arrayOfResults);
+                });
+
              });
           });
        }
@@ -2620,9 +2624,13 @@ sub jsExploreObjectMethods
                       var subrec=data[recno].systems[subno];
                       app.addNode('itil::system',subrec.systemid,subrec.system);
                       app.addEdge(app.toObjKey(dataobj,dataobjid),
-                                  app.toObjKey('itil::system',subrec.systemid));
+                                  app.toObjKey('itil::system',subrec.systemid),
+                                  {noAcross:true});
                    }
                 }
+                app.processOpStack(function(arrayOfResults){
+                   console.log(\"OK, all systems loaded arrayOfResults=\",arrayOfResults);
+                });
              });
           });
        }
