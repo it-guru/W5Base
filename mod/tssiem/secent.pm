@@ -37,7 +37,7 @@ sub new
                 name          =>'ictono',
                 group         =>'scan',
                 label         =>'ICTO-ID',
-                dataobjattr   =>"('ICTO-'||W5SIEM_secscan.ictoid)"),
+                dataobjattr   =>"W5SIEM_secscan.ictoid"),
 
       new kernel::Field::Date(
                 name          =>'sdate',
@@ -53,6 +53,7 @@ sub new
                 name          =>'systems',
                 label         =>'possible W5Base System',
                 vjointo       =>'itil::system',
+                searchable    =>0,
                 vjoinbase     =>[{cistatusid=>"<=4"}],
                 vjoinon       =>['ipaddress'=>'ipaddresses'],
                 vjoindisp     =>['name','applications']),
@@ -78,6 +79,10 @@ sub new
                 name          =>'qid',
                 label         =>'QID',
                 dataobjattr   =>"W5SIEM_secent.qid"),
+
+      # CERT Daten sind in QID= ...
+      # 86002, 38600,38170,38173,38169,38167 sind relevant, wobei 86002 das
+      # Zert.Detail hat.
 
       new kernel::Field::Text(
                 name          =>'name',
@@ -161,8 +166,29 @@ sub new
                 name          =>'scanname',
                 label         =>'Scan Title',
                 sqlorder      =>'NONE',
+                weblinkto     =>'tssiem::secscan',
+                weblinkon     =>['scanqref'=>'qref'],
                 group         =>'scan',
                 dataobjattr   =>"W5SIEM_secscan.title"),
+
+      new kernel::Field::Text(
+                name          =>'scanqref',
+                group         =>'source',
+                label         =>'Scan-ID',
+                dataobjattr   =>'W5SIEM_secscan.ref'),
+
+      new kernel::Field::Link(
+                name          =>'scanid',
+                label         =>'Scan ID',
+                group         =>'scan',
+                dataobjattr   =>"W5SIEM_secscan.id"),
+
+      new kernel::Field::Textarea(
+                name          =>'results',
+                label         =>'Results',
+                htmldetail    =>'NotEmpty',
+                sqlorder      =>'NONE',
+                dataobjattr   =>'W5SIEM_secent.results'),
 
 
       new kernel::Field::Text(
@@ -175,7 +201,7 @@ sub new
                 name          =>'srcid',
                 group         =>'source',
                 label         =>'Source-Id',
-                dataobjattr   =>'W5SIEM_secent.ROWID'),
+                dataobjattr   =>'W5SIEM_secent.id'),
 
       new kernel::Field::Date(
                 name          =>'srcload',
@@ -238,7 +264,8 @@ sub SecureSetFilter
    my $self=shift;
    my @flt=@_;
 
-   if (!$self->IsMemberOf([qw(admin w5base.tssiem.secent.read)],
+   if (!$self->IsMemberOf([qw(admin w5base.tssiem.secscan.read
+                                    w5base.tssiem.secent.read)],
                           "RMember")){
       my @addflt;
       $self->tssiem::secscan::addICTOSecureFilter(\@addflt);
