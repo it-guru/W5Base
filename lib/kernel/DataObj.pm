@@ -2646,10 +2646,12 @@ sub findNearestTargetDataObj
             return($nto);
          }
          else{
-            msg(ERROR,"invalid findNearestTargetDataObj in '$s' ".
-                      "from '$to' to '$nto' ".
-                      "requested for ".$requestedfor." needs SCALAR ref ".
-                      "because not unique dataobject names");
+            if ($self->Config->Param("W5BaseOperationMode") eq "dev"){
+               msg(WARN,"unable findNearestTargetDataObj in '$s' ".
+                        "from '$to' to '$nto' ".
+                        "requested for ".$requestedfor." needs SCALAR ref ".
+                        "because not unique dataobject names");
+            }
          }
       }
    }
@@ -3426,6 +3428,25 @@ sub getFieldHash
    return(\%fh);
 }
 
+
+sub getFieldRawValue
+{
+   my $self=shift;
+   my $fieldname=shift;
+   my $current=shift;
+   my $mode=shift;
+
+   my $fld=$self->getField($fieldname,$current);
+   if (defined($fld)){
+      return($fld->RawValue($current,$mode));
+   }
+   msg(ERROR,"invalid field access at $self getFieldRawValue($fieldname)");
+   Stacktrace();
+}
+
+
+
+
 sub getField
 {
    my $self=shift;
@@ -3554,6 +3575,7 @@ sub RawValue
    my $current=shift;
    my $field=shift;
    my $mode=shift;
+
    if (!defined($field)){
       #msg(ERROR,"access to unknown field '$key' in $self");
       return(undef);
@@ -4058,7 +4080,7 @@ sub DataObj_findtemplvar
       my $mode=$defmode;
       $mode=$opt->{mode} if (defined($opt->{mode}));
       if (!defined($param[0])){
-         return($fieldobj->RawValue($current));
+         return($fieldobj->RawValue($current,$mode));
       }
       if ($param[0] eq "formated" || $param[0] eq "detail" || 
           $param[0] eq "sublistedit" || $param[0] eq "forceedit"){
