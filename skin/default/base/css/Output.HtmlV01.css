@@ -4,10 +4,7 @@
    position: fixed;
    z-index: 5;
    bottom:0px;
-   right:5px;
-}
-.HtmlNativeHighlight{
-   background-color:yellow;
+   right:0px;
 }
 table.maintable{
    border-collapse:collapse;
