@@ -91,6 +91,7 @@ sub new
 
       new kernel::Field::Text(
                 name          =>'qid',
+                htmltablesort =>'Number',
                 label         =>'QID',
                 dataobjattr   =>"W5SIEM_secent.qid"),
 
@@ -120,6 +121,7 @@ sub new
 
       new kernel::Field::Text(
                 name          =>'port',
+                htmltablesort =>'Number',
                 label         =>'Port',
                 dataobjattr   =>"W5SIEM_secent.port"),
 
