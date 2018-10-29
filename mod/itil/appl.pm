@@ -1084,7 +1084,7 @@ sub new
                 name          =>'isnosysappl',
                 group         =>'control',
                 htmleditwidth =>'30%',
-                label         =>'Application has no system components',
+                label         =>'Application has no system or cloud components',
                 dataobjattr   =>'appl.is_applwithnosys'),
 
       new kernel::Field::Boolean(
