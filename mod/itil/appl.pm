@@ -457,7 +457,9 @@ sub new
                 vjoinbase     =>[{cistatusid=>"<=5"}],
                 vjointo       =>'itil::itcloudarea',
                 vjoinon       =>['id'=>'applid'],
-                vjoindisp     =>['fullname','cistatus']),
+                vjoindisp     =>['fullname','cistatus'],
+                vjoininhash   =>['fullname','cistatusid',
+                                 'id','mdate','cdate']),
 
       new kernel::Field::SubList(
                 name          =>'businessservices',
