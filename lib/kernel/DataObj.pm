@@ -3493,11 +3493,13 @@ sub getFieldHash
    my $self=shift;
    my %param=@_;
    my %fh;
-   if (ref($self->{'FrontendField'}) eq "HASH"){
-      %fh=(%{$self->{'Field'}},%{$self->{'FrontendField'}});
-   }
-   else{
-      %fh=(%{$self->{'Field'}});
+   if (ref($self->{'Field'}) eq "HASH"){
+      if (ref($self->{'FrontendField'}) eq "HASH"){
+         %fh=(%{$self->{'Field'}},%{$self->{'FrontendField'}});
+      }
+      else{
+         %fh=(%{$self->{'Field'}});
+      }
    }
    if (defined($self->{SubDataObj})){
       foreach my $SubDataObj (sort(keys(%{$self->{SubDataObj}}))){
