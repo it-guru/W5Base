@@ -47,7 +47,7 @@ sub new
                 vjoinon       =>'userid',
                 dataobjattr   =>'contact.fullname'),
 
-      new kernel::Field::Link(
+      new kernel::Field::Interface(
                 name          =>'userid',
                 label         =>'UserID',
                 readonly      =>1,
@@ -75,7 +75,7 @@ sub new
                 readonly      =>1,
                 dataobjattr   =>'grp.fullname'),
 
-      new kernel::Field::Link(
+      new kernel::Field::Interface(
                 name          =>'grpid',
                 dataobjattr   =>'grp.grpid'),
 
