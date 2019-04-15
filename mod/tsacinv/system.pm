@@ -232,6 +232,12 @@ sub new
                 dataobjattr   =>'system."nature"'),
 
       new kernel::Field::Boolean(
+                name          =>'isprotnetdev',
+                label         =>'is protected network device',
+                group         =>'form',
+                dataobjattr   =>'"isProtectedNetworkDevice"'),
+
+      new kernel::Field::Boolean(
                 name          =>'soxrelevant',
                 label         =>'SOX relevant',
                 group         =>'form',
