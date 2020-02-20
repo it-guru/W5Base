@@ -356,7 +356,7 @@ sub new
                 group         =>'userro',
                 vjointo       =>'base::useraccount',
                 vjoinon       =>['userid'=>'userid'],
-                vjoindisp     =>['account','cdate'],
+                vjoindisp     =>['account','cdate','lastlogon'],
                 vjoininhash   =>['account','userid']),
 
       new kernel::Field::Phonenumber(
