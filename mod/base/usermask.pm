@@ -207,6 +207,7 @@ sub Main
    }
    print(Query->Header(%h)); 
    print $self->HtmlHeader(style=>'default.css',
+                           js=>['toolbox.js'],
                            title=>$self->T($self->Self()),
                            onload=>'initOnLoad();');
    print $self->HtmlBottom(body=>1,form=>1);
@@ -223,6 +224,15 @@ function initOnLoad()
    if (o){  // falls ResetButton da ist
       o.focus();
    }
+   addFunctionKeyHandler(document.forms[0],
+      function(e){
+         if (e.keyCode == 27) {
+            parent.hidePopWin(false);
+            return(false);
+         }
+         return(true);
+      }
+   );
 }
 function SetNewAcc(o)
 {
